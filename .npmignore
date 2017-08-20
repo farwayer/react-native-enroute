@@ -1,0 +1,7 @@
+.idea/
+test/
+example/
+.babelrc
+yarn.lock
+.npmignore
+.travis.yml

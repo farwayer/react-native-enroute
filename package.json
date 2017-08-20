@@ -1,0 +1,21 @@
+{
+  "name": "react-native-enroute",
+  "version": "1.0.0",
+  "description": "Simple and fast React Native router based on enroute and react-navigation",
+  "repository": "farwayer/react-native-enroute",
+  "author": "farwayer <farwayer@gmail.com>",
+  "license": "WTFPL",
+  "main": "src/index.js",
+  "keywords": [
+    "react-native",
+    "router",
+    "navigation",
+    "navigator",
+    "enroute",
+    "react-navigation",
+    "stack"
+  ],
+  "peerDependencies": {
+    "react-navigation": "^1.0.0-beta.12"
+  }
+}
