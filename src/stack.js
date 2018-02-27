@@ -42,6 +42,7 @@ export class Stack extends Component {
             onNavigateBack();
           },
           goBack: onNavigateBack,
+          addListener: () => {},
         }}
         router={{
           getScreenOptions,

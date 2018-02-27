@@ -63,9 +63,7 @@ class App extends React.Component {
   
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', () => {
-      requestAnimationFrame(() => {
-        this.routerState.pop();
-      });
+      this.routerState.pop();
       return true;
     });    
   }
@@ -73,16 +71,8 @@ class App extends React.Component {
   render() {
     return (
       <View>
-        <Button onPress={() => {
-          requestAnimationFrame(() => {
-            this.routerState.push('/shops/123');
-          });
-        }} />
-        <Button onPress={() => {
-          requestAnimationFrame(() => {
-            this.routerState.reset('/quest/1');
-          });
-        }} />
+        <Button onPress={() => this.routerState.push('/shops/123')} />
+        <Button onPress={() => this.routerState.reset('/quest/1')} />
         <Routes location={this.state.location} />
       </View>
     )
@@ -97,6 +87,10 @@ AppRegistry.registerComponent('app', () => App);
 ```
 
 ## Changelog
+
+### 1.1.0
+
+- daptation to latest react-navigation (1.2.1)
 
 ### 1.0.0
 
