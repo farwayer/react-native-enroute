@@ -49,7 +49,7 @@ export class Stack extends Component {
           getComponentForRouteName: key => {
             const routeIndex = StateUtils.indexOf(this.navState, key);
             const {component = null} = this.navState.routes[routeIndex] || {};
-            return () => component;
+            return component;
           },
         }}
         {...props}
@@ -70,7 +70,8 @@ export class Stack extends Component {
   }
 
   currentRoute() {
-    const {location: key, children: component} = this.props;
+    const {location: key, children} = this.props;
+    const component = () => children;
     return {key, component, routeName: key};
   }
 }

@@ -88,9 +88,13 @@ AppRegistry.registerComponent('app', () => App);
 
 ## Changelog
 
+### 1.1.1
+
+- fix component can be rendered several times
+
 ### 1.1.0
 
-- daptation to latest react-navigation (1.2.1)
+- adaptation to latest react-navigation (1.2.1)
 
 ### 1.0.0
 
