@@ -1,14 +1,11 @@
 import React, {Component} from 'react'
-import {
-  CardStackTransitioner,
-  StateUtils,
-  NavigationActions,
-} from 'react-navigation'
+import {StackView, StateUtils, NavigationActions} from 'react-navigation'
 
 
 export class Stack extends Component {
   static defaultProps = {
-    getScreenOptions: (navigation, props) => ({}),
+    options: {},
+    onNavigateBack: () => {},
   };
 
   navState = {
@@ -17,14 +14,7 @@ export class Stack extends Component {
   };
 
   render() {
-    const {
-      location,
-      getScreenOptions,
-      onNavigateBack,
-      children,
-      params,
-      ...props,
-    } = this.props;
+    const {location, options, onNavigateBack, children, ...props} = this.props;
     const index = StateUtils.indexOf(this.navState, location);
 
     if (index === -1) {
@@ -33,28 +23,29 @@ export class Stack extends Component {
       this.popToIndex(index);
     }
 
+    const navigation = {
+      state: this.navState,
+      dispatch: ({type}) => {
+        if (type !== NavigationActions.BACK) return;
+        onNavigateBack();
+      },
+      goBack: onNavigateBack,
+    };
+
+    const descriptors = this.navState.routes.reduce((descs, route) => {
+      const {key, component} = route;
+      const getComponent = () => component;
+      descs[key] = {options, getComponent, navigation};
+      return descs;
+    }, {});
+
     return (
-      <CardStackTransitioner
-        navigation={{
-          state: this.navState,
-          dispatch: ({type}) => {
-            if (type !== NavigationActions.BACK) return;
-            onNavigateBack();
-          },
-          goBack: onNavigateBack,
-          addListener: () => {},
-        }}
-        router={{
-          getScreenOptions,
-          getComponentForRouteName: key => {
-            const routeIndex = StateUtils.indexOf(this.navState, key);
-            const {component = null} = this.navState.routes[routeIndex] || {};
-            return component;
-          },
-        }}
+      <StackView
+        onTransitionEnd={this.onTransitionEnd}
+        {...{descriptors, navigation}}
         {...props}
       />
-    );
+    )
   }
 
   push() {
@@ -63,17 +54,22 @@ export class Stack extends Component {
   }
 
   popToIndex(index) {
-    this.navState = {
-      index,
-      routes: this.navState.routes.slice(0, index + 1)
-    };
+    this.navState = {...this.navState, index};
   }
 
   currentRoute() {
     const {location: key, children} = this.props;
     const component = () => children;
-    return {key, component, routeName: key};
+    return {key, component};
   }
+
+  onTransitionEnd = (transition, last) => {
+    const currentIndex = transition.navigation.state.index;
+    const prevIndex = last.navigation.state.index;
+    if (currentIndex >= prevIndex) return;
+
+    this.navState.routes = this.navState.routes.slice(0, currentIndex + 1);
+  };
 }
 
 export default function createStack(props={}) {
