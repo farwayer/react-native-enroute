@@ -3,7 +3,7 @@ import {Animated, Easing} from 'react-native'
 import {inject} from 'mobx-react'
 import {Router, Route} from 'react-enroute'
 import {createStack} from 'react-native-enroute'
-import CardStackStyleInterpolator from 'react-navigation/lib-rn/views/CardStack/CardStackStyleInterpolator'
+import StackViewStyleInterpolator from 'react-navigation/src/views/StackView/StackViewStyleInterpolator'
 import * as screens from './screens'
 
 
@@ -15,15 +15,18 @@ const TransitionSpec = {
 
 const SlideFromRight = {
   transitionSpec: TransitionSpec,
-  screenInterpolator: CardStackStyleInterpolator.forHorizontal,
+  screenInterpolator: StackViewStyleInterpolator.forHorizontal,
 };
 
 function newStack() {
-  return new createStack({
-    transitionConfig: () => SlideFromRight,
-    getScreenOptions: () => ({
+  return createStack({
+    navigationConfig: {
+      headerMode: 'none',
+      transitionConfig: () => SlideFromRight,
+    },
+    options: {
       gesturesEnabled: true,
-    }),
+    },
   });
 }
 

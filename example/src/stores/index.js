@@ -1,5 +1,5 @@
-import {useStrict} from 'mobx'
+import {configure} from 'mobx'
 
-useStrict(true);
+configure({enforceActions: true});
 
 export Router from './router'
