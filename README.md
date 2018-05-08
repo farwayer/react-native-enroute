@@ -23,7 +23,7 @@ React Native Enroute plays well in company with Redux and MobX.
 ## Installation
 
 ```bash
-npm install --save react-enroute react-navigation@2.0.0-rc.9 react-native-enroute
+npm install --save react-enroute react-navigation react-native-enroute
 ```
 
 ## Usage
@@ -111,6 +111,10 @@ AppRegistry.registerComponent('app', () => App);
 ```
 
 ## Changelog
+
+### 2.0.1
+
+- use react-navigation release version
 
 ### 2.0.0
 
