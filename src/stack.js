@@ -10,7 +10,8 @@ export class Stack extends Component {
 
   navState = {
     index: -1,
-    routes: []
+    routes: [],
+    isTransitioning: true,
   };
 
   render() {

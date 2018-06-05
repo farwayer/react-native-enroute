@@ -112,6 +112,10 @@ AppRegistry.registerComponent('app', () => App);
 
 ## Changelog
 
+### 2.0.2
+
+- fix for react-navigation 2.1.x
+
 ### 2.0.1
 
 - use react-navigation release version
