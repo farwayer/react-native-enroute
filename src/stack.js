@@ -1,80 +1,74 @@
-import React, {Component} from 'react'
-import {StackView, StateUtils, NavigationActions} from 'react-navigation'
+import React, {useState, useMemo} from 'react'
+import StackView from 'react-navigation-stack/src/views/Stack/StackView'
+import {StackActions} from 'react-navigation'
 
 
-export class Stack extends Component {
-  static defaultProps = {
-    options: {},
-    onNavigateBack: () => {},
-  };
+export function Stack({
+  location,
+  navigationConfig = {},
+  options = {},
+  onNavigateBack = () => {},
+  children,
+  ...props
+}) {
+  const [state, setState] = useState({
+    index: 0,
+    routes: [route(location, children)],
+  })
 
-  navState = {
-    index: -1,
-    routes: [],
-    isTransitioning: true,
-  };
+  const index = state.routes.findIndex(route => route.key === location)
+  switch (index) {
+    case state.index: break
 
-  render() {
-    const {location, options, onNavigateBack, children, ...props} = this.props;
-    const index = StateUtils.indexOf(this.navState, location);
+    // push
+    case -1: setState({
+      index: state.index + 1,
+      routes: state.routes.concat(route(location, children)),
+    })
+      break
 
-    if (index === -1) {
-      this.push();
-    } else {
-      this.popToIndex(index);
-    }
-
-    const navigation = {
-      state: this.navState,
-      dispatch: ({type}) => {
-        if (type !== NavigationActions.BACK) return;
-        onNavigateBack();
-      },
-      goBack: onNavigateBack,
-    };
-
-    const descriptors = this.navState.routes.reduce((descs, route) => {
-      const {key, component} = route;
-      const getComponent = () => component;
-      descs[key] = {options, getComponent, navigation};
-      return descs;
-    }, {});
-
-    return (
-      <StackView
-        onTransitionEnd={this.onTransitionEnd}
-        {...{descriptors, navigation}}
-        {...props}
-      />
-    )
+    // pop to index
+    default: setState({
+      index,
+      routes: state.routes.slice(0, index + 1),
+    })
   }
 
-  push() {
-    const route = this.currentRoute();
-    this.navState = StateUtils.push(this.navState, route);
-  }
+  const navigation = useMemo(() => ({
+    state,
+    dispatch(action) {
+      if (action.type !== StackActions.POP) return
+      if (action.key !== location) return
+      onNavigateBack()
+    },
+  }), [state])
 
-  popToIndex(index) {
-    this.navState = {...this.navState, index};
-  }
+  const descriptors = useMemo(() => (
+    state.routes.reduce((res, route) => {
+      const {key, Component} = route
+      const getComponent = () => Component
+      res[key] = {getComponent, options}
+      return res
+    }, {})
+  ), [state.routes])
 
-  currentRoute() {
-    const {location: key, children} = this.props;
-    const component = () => children;
-    return {key, component};
-  }
-
-  onTransitionEnd = (transition, last) => {
-    const currentIndex = transition.navigation.state.index;
-    const prevIndex = last.navigation.state.index;
-    if (currentIndex >= prevIndex) return;
-
-    this.navState.routes = this.navState.routes.slice(0, currentIndex + 1);
-  };
+  return (
+    <StackView
+      {...{navigation, descriptors, navigationConfig}}
+      {...props}
+    />
+  )
 }
 
-export default function createStack(props={}) {
+export default function createStack(props) {
   return routerProps => (
     <Stack {...routerProps} {...props} />
   )
+}
+
+function route(location, children) {
+  return {
+    key: location,
+    Component: () => children,
+  }
 }
