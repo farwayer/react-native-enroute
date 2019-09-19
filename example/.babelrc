@@ -1,8 +1,0 @@
-{
-  "presets": ["react-native"],
-  "plugins": [
-    "transform-decorators-legacy",
-    "transform-export-extensions",
-    ["module-resolver", {"root": ["src"]}]
-  ]
-}
