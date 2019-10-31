@@ -1,44 +1,53 @@
-import React, {useState, useMemo} from 'react'
+import React, {useState, useMemo, useEffect} from 'react'
 import StackView from 'react-navigation-stack/src/views/Stack/StackView'
 import {StackActions} from 'react-navigation'
+import keygen from './keygen'
 
 
 export function Stack({
-  location,
+  paths,
   navigationConfig = {},
   options = {},
   onNavigateBack = () => {},
   children,
   ...props
 }) {
-  const [state, setState] = useState({
-    index: 0,
-    routes: [route(location, children)],
-  })
-
-  const index = state.routes.findIndex(route => route.key === location)
-  switch (index) {
-    case state.index: break
-
-    // push
-    case -1: setState({
-      index: state.index + 1,
-      routes: state.routes.concat(route(location, children)),
-    })
-      break
-
-    // pop to index
-    default: setState({
-      index,
-      routes: state.routes.slice(0, index + 1),
-    })
+  const count = paths?.length
+  if (!count) {
+    throw new Error("react-native-enroute: paths must not be empty")
   }
+
+  const topPath = paths[count - 1]
+  const [state, setState] = useState(() => ({
+    index: 0,
+    routes: [makeRoute(topPath, children)],
+  }))
+
+  useEffect(() => {
+    const routes = paths.reduce((res, path, i) => {
+      let route = state.routes[i]
+
+      if (route?.path !== path) {
+        route = makeRoute(path, children)
+      }
+
+      res.push(route)
+      return res
+    }, [])
+
+    setState({
+      index: count - 1,
+      routes,
+    })
+  }, [count, children])
 
   const navigation = useMemo(() => ({
     state,
     dispatch(action) {
       if (action.type !== StackActions.POP) return
-      if (action.key !== location) return
+      // POP arrives both for user swipe/back-button and for new routes
+      // we call onNavigateBack() only for user activity
+      if (action.key !== topPath) return
       onNavigateBack()
     },
   }), [state])
@@ -66,9 +75,10 @@ export default function createStack(props) {
   )
 }
 
-function route(location, children) {
+function makeRoute(path, children) {
   return {
-    key: location,
+    key: keygen(),
+    path,
     Component: () => children,
   }
 }
