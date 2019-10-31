@@ -1,6 +1,6 @@
 {
   "name": "react-native-enroute",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Simple and fast React Native router based on enroute and react-navigation",
   "repository": "farwayer/react-native-enroute",
   "author": "farwayer <farwayer@gmail.com>",
