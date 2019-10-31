@@ -30,14 +30,14 @@ export default class State {
 
 
   push = path => {
-    this.paths.push(path)
+    this.paths = this.paths.concat(path)
     this._notify('push')
   }
 
   pop = () => {
     if (!this.canPop) return
 
-    this.paths.pop()
+    this.paths = this.paths.slice(0, this.paths.length - 1)
     this._notify('pop')
   }
 
