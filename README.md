@@ -2,14 +2,12 @@
 
 _Simple and fast React Native router based on enroute and react-navigation_
 
-To be honest it is not real router at all. This package contains some helpers
-to use [react-enroute](https://github.com/tj/react-enroute)
+[![NPM version](https://img.shields.io/npm/v/react-native-enroute.svg)](https://www.npmjs.com/package/react-native-enroute)
+
+To be honest it is not real router at all. This package contains some wrappers
+that help use [react-enroute](https://github.com/tj/react-enroute)
 with [react-navigation](https://github.com/react-community/react-navigation).
-
-Library has very basic functions at the moment. I will complement the
-functionality as I need it.  
-
-React Native Enroute plays well in company with Redux and MobX.
+Only stack helpers at the moment. Library plays well with Redux and MobX.
 
 ## Usage
 
@@ -21,18 +19,60 @@ yarn add react-enroute react-native-enroute
 ```
 
 ```js
-import {useState, useMemo, useEffect} from 'react'
-import {BackHandler, AppRegistry, View, Button} from 'react-native'
 import {Router, Route} from 'react-enroute'
-import {State, createStack} from 'react-native-enroute'
+import {State, Stack, createStack} from 'react-native-enroute'
 import {TransitionPresets} from 'react-navigation-stack'
 import * as screens from './screens'
 
+
+function Routes(props) {
+  return (
+    <Router {...props}>
+      <Route path='/shops' component={Stack}>
+        <Route component={screens.ShopList} />
+        <Route path=':id' component={screens.ShopDetail} />
+      </Route>
+      <Route path='/quest' component={newStack() /* customization */}>
+        <Route component={screens.AllQuestions} />
+        <Route path=':id' component={screens.Question} />
+      </Route>
+    </Router>
+  )
+}
+
+function App() {
+  const [routerState] = useState(() => new State('/shops'))
+  const pop = useCallback(() => {
+    routerState.pop()
+    return true
+  }, [])
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', pop)
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', pop)
+    }
+  }, [])
+
+  return (
+    <View>
+      <Button onPress={() => routerState.push('/shops/123')} />
+      <Button onPress={() => routerState.reset('/quest/1')} />
+      <Routes
+        location={routerState.current}
+        paths={routerState.paths}
+        onNavigateBack={pop}
+      />
+    </View>
+  )
+}
+
+// optional; you can simply use Stack as component
 function newStack() {
   const preset = TransitionPresets.SlideFromRightIOS
 
   return createStack({
-    // all are optional
     navigationConfig: {
       headerMode: 'none',
     },
@@ -44,43 +84,4 @@ function newStack() {
     },
   })
 }
-
-function Routes(props) {
-  return (
-    <Router {...props}>
-      <Route path='/shops' component={newStack()}>
-        <Route component={screens.ShopList} />
-        <Route path=':shop' component={screens.ShopDetail} />
-      </Route>
-      <Route path='/quest' component={newStack()}>
-        <Route component={screens.AllQuestions} />
-        <Route path=':q' component={screens.Question} />
-      </Route>
-    </Router>
-  )
-}
-
-function App() {
-  const [location, setLocation] = useState('/shops')
-  const routerState = useMemo(() => new State(location, setLocation), [])
-
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      routerState.pop()
-      return true
-    })
-
-    return () => {} // TODO: remove listener
-  }, [])
-
-  return (
-    <View>
-      <Button onPress={() => routerState.push('/shops/123')} />
-      <Button onPress={() => routerState.reset('/quest/1')} />
-      <Routes location={location} onNavigateBack={routerState.pop} />
-    </View>
-  )
-}
-
-AppRegistry.registerComponent('app', () => App);
 ```
