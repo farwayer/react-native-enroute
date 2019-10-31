@@ -6,7 +6,7 @@ import keygen from './keygen'
 
 export default function Stack({
   paths,
-  navigationConfig = {},
+  navigationConfig = {}, // set default to fix crash
   options = {},
   onNavigateBack = () => {},
   children,
