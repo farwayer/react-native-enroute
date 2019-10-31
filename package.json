@@ -16,6 +16,6 @@
     "stack"
   ],
   "peerDependencies": {
-    "react-navigation-stack": "^2.0.0-alpha.14"
+    "react-navigation-stack": "^2.0.0"
   }
 }
