@@ -4,7 +4,7 @@ import {StackActions} from 'react-navigation'
 import keygen from './keygen'
 
 
-export function Stack({
+export default function Stack({
   paths,
   navigationConfig = {},
   options = {},
@@ -71,12 +71,6 @@ export function Stack({
       {...{navigation, descriptors, navigationConfig}}
       {...props}
     />
-  )
-}
-
-export default function createStack(props) {
-  return routerProps => (
-    <Stack {...routerProps} {...props} />
   )
 }
 
