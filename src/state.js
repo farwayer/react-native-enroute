@@ -24,6 +24,10 @@ export default class State {
     return this.length > 1
   }
 
+  get root() {
+    return this.paths[0]
+  }
+
 
   push = path => {
     this.paths.push(path)
@@ -37,8 +41,8 @@ export default class State {
     this._notify('pop')
   }
 
-  popTop = () => {
-    this.reset(this.paths[0])
+  popRoot = () => {
+    this.reset(this.root)
   }
 
   reset = path => {
