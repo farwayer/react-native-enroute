@@ -61,10 +61,10 @@ export function Stack({
     state.routes.reduce((res, route) => {
       const {key, Component} = route
       const getComponent = () => Component
-      res[key] = {getComponent, options}
+      res[key] = {getComponent, options, navigation}
       return res
     }, {})
-  ), [state.routes])
+  ), [state.routes, navigation])
 
   return (
     <StackView
