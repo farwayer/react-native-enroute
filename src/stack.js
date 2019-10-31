@@ -17,11 +17,13 @@ export function Stack({
     throw new Error("react-native-enroute: paths must not be empty")
   }
 
-  const topPath = paths[count - 1]
-  const [state, setState] = useState(() => ({
-    index: 0,
-    routes: [makeRoute(topPath, children)],
-  }))
+  const [state, setState] = useState(() => {
+    const topPath = paths[count - 1]
+    return {
+      index: 0,
+      routes: [makeRoute(topPath, children)],
+    }
+  })
 
   useEffect(() => {
     const routes = paths.reduce((res, path, i) => {
@@ -45,9 +47,12 @@ export function Stack({
     state,
     dispatch(action) {
       if (action.type !== StackActions.POP) return
-      // POP arrives both for user swipe/back-button and for new routes
+
+      // POP arrives both for user swipe/back-button and for new routes state
       // we call onNavigateBack() only for user activity
-      if (action.key !== topPath) return
+      const topKey = state.routes[state.routes.length - 1].key
+      if (action.key !== topKey) return
+
       onNavigateBack()
     },
   }), [state])
