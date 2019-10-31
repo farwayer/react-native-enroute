@@ -1,2 +1,2 @@
-export Stack from './stack'
+export createStack, {Stack} from './stack'
 export State from './state'
