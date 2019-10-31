@@ -1,5 +1,13 @@
 ## Changelog
 
+### 4.0.0
+
+- replace `location` with `paths`. Now you can have multiply scenes with the
+same path in stack!
+- state paths is immutable now
+- replace state `popTop()` to `popRoot()`; `root` getter
+- fix default header throws error on back arrow
+
 ### 3.0.0
 
 - react-navigation 4.x
