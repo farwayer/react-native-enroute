@@ -1,5 +1,12 @@
 ## Changelog
 
+### 5.0.0
+
+- react-navigation-stack@2.0.15
+- use memo for `Stack`
+- memoize returned from `createStack()` component
+
+
 ### 4.0.0
 
 - replace `location` with `paths`. Now you can have multiply scenes with the
