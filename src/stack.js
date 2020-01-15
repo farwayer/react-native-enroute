@@ -1,17 +1,16 @@
-import React, {useState, useMemo, useEffect} from 'react'
-import StackView from 'react-navigation-stack/src/views/Stack/StackView'
+import React, {useState, useMemo, useEffect, useCallback, memo} from 'react'
+import {StackView} from 'react-navigation-stack'
 import {StackActions} from 'react-navigation'
 import keygen from './keygen'
 
 
-export function Stack({
+export const Stack = memo(({
   paths,
-  navigationConfig = {}, // set default to fix crash
   options = {},
   onNavigateBack = () => {},
   children,
   ...props
-}) {
+}) => {
   const count = paths?.length
   if (!count) {
     throw new Error("react-native-enroute: paths must not be empty")
@@ -68,16 +67,16 @@ export function Stack({
 
   return (
     <StackView
-      {...{navigation, descriptors, navigationConfig}}
+      {...{state, navigation, descriptors}}
       {...props}
     />
   )
-}
+})
 
 export default function createStack(props) {
-  return routerProps => (
+  return useCallback(routerProps => (
     <Stack {...routerProps} {...props} />
-  )
+  ), [])
 }
 
 function makeRoute(path, children) {
