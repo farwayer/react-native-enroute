@@ -20,7 +20,7 @@ yarn add react-enroute react-native-enroute
 
 ```js
 import {Router, Route} from 'react-enroute'
-import {State, Stack, createStack} from 'react-native-enroute'
+import {State, createStack} from 'react-native-enroute'
 import {TransitionPresets} from 'react-navigation-stack'
 import * as screens from './screens'
 
@@ -28,11 +28,11 @@ import * as screens from './screens'
 function Routes(props) {
   return (
     <Router {...props}>
-      <Route path='/shops' component={Stack}>
+      <Route path='/shops' component={createStack()}>
         <Route component={screens.ShopList} />
         <Route path=':id' component={screens.ShopDetail} />
       </Route>
-      <Route path='/quest' component={newStack() /* customization */}>
+      <Route path='/quest' component={createCustomStack()}>
         <Route component={screens.AllQuestions} />
         <Route path=':id' component={screens.Question} />
       </Route>
@@ -68,14 +68,11 @@ function App() {
   )
 }
 
-// optional; you can simply use Stack as component
-function newStack() {
+function createCustomStack() {
   const preset = TransitionPresets.SlideFromRightIOS
 
   return createStack({
-    navigationConfig: {
-      headerMode: 'none',
-    },
+    headerMode: 'none',
     options: {
       gestureEnabled: true,
       gestureDirection: preset.gestureDirection,
