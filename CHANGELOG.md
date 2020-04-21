@@ -1,5 +1,9 @@
 ## Changelog
 
+### 6.0.0
+
+- react-navigation@5
+
 ### 5.0.0
 
 - react-navigation-stack@2.0.15

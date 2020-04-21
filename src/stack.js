@@ -1,13 +1,16 @@
 import React, {useState, useMemo, useEffect, useCallback, memo} from 'react'
-import {StackView} from 'react-navigation-stack'
-import {StackActions} from 'react-navigation'
+import {StackView} from '@react-navigation/stack'
+import {StackActions} from '@react-navigation/native'
 import keygen from './keygen'
+
+
+const Pop = StackActions.pop().type
 
 
 export const Stack = memo(({
   paths,
+  onNavigateBack,
   options = {},
-  onNavigateBack = () => {},
   children,
   ...props
 }) => {
@@ -25,17 +28,22 @@ export const Stack = memo(({
   })
 
   useEffect(() => {
+    // we will update state only if paths changed
+    let updateState = state.routes.length !== count
+
     const routes = paths.reduce((res, path, i) => {
       let route = state.routes[i]
 
       if (route?.path !== path) {
         route = makeRoute(path, children)
+        updateState = true
       }
 
       res.push(route)
       return res
     }, [])
 
+    if (!updateState) return
     setState({
       index: count - 1,
       routes,
@@ -44,26 +52,26 @@ export const Stack = memo(({
 
   const navigation = useMemo(() => ({
     state,
+    emit() {},
     dispatch(action) {
-      if (action.type !== StackActions.POP) return
+      if (action.type !== Pop) return
 
       // POP arrives both for user swipe/back-button and for new routes state
       // we call onNavigateBack() only for user activity
       const topKey = state.routes[state.routes.length - 1].key
-      if (action.key !== topKey) return
+      if (action.source !== topKey) return
 
-      onNavigateBack()
+      onNavigateBack?.()
     },
   }), [state])
 
   const descriptors = useMemo(() => (
     state.routes.reduce((res, route) => {
-      const {key, Component} = route
-      const getComponent = () => Component
-      res[key] = {getComponent, options, navigation}
+      const {key, render} = route
+      res[key] = {render, options, navigation}
       return res
     }, {})
-  ), [state.routes, navigation])
+  ), [state.routes, options, navigation])
 
   return (
     <StackView
@@ -74,15 +82,15 @@ export const Stack = memo(({
 })
 
 export default function createStack(props) {
-  return useCallback(routerProps => (
-    <Stack {...routerProps} {...props} />
-  ), [])
+  return useCallback(routerProps => {
+    return <Stack {...routerProps} {...props}/>
+  }, [])
 }
 
 function makeRoute(path, children) {
   return {
     key: keygen(),
     path,
-    Component: () => children,
+    render: () => children,
   }
 }

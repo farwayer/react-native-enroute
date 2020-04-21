@@ -1,47 +1,49 @@
 # React Native Enroute
 
-_Simple and fast React Native router based on enroute and react-navigation_
+_Simple and fast React Native router based on react-enroute and react-navigation_
 
 [![NPM version](https://img.shields.io/npm/v/react-native-enroute.svg)](https://www.npmjs.com/package/react-native-enroute)
 
 To be honest it is not real router at all. This package contains some wrappers
-that help use [react-enroute](https://github.com/tj/react-enroute)
+for using [react-enroute](https://github.com/tj/react-enroute)
 with [react-navigation](https://github.com/react-community/react-navigation).
-Only stack helpers at the moment. Library plays well with Redux and MobX.
+Library plays well with Redux and MobX.
 
 ## Usage
 
-Complete `react-navigation` installation guide first
+Complete [`react-navigation` stack](https://reactnavigation.org/docs/stack-navigator)
+installation guide first
 
 ```bash
-yarn add react-navigation react-navigation-stack react-native-gesture-handler react-native-screens react-native-reanimated
 yarn add react-enroute react-native-enroute
 ```
 
 ```js
-import {Router, Route} from 'react-enroute'
+import {Router} from 'react-enroute'
 import {State, createStack} from 'react-native-enroute'
-import {TransitionPresets} from 'react-navigation-stack'
-import * as screens from './screens'
+import {TransitionPresets} from '@react-navigation/stack'
 
 
-function Routes(props) {
+function Routes({location, paths, onNavigateBack}) {
+  const ShopTab = stack(paths, onNavigateBack)
+  const QuestTab = stack(paths, onNavigateBack)
+
   return (
-    <Router {...props}>
-      <Route path='/shops' component={createStack()}>
-        <Route component={screens.ShopList} />
-        <Route path=':id' component={screens.ShopDetail} />
-      </Route>
-      <Route path='/quest' component={createCustomStack()}>
-        <Route component={screens.AllQuestions} />
-        <Route path=':id' component={screens.Question} />
-      </Route>
+    <Router {...{location}}>
+      <ShopTab path='/shops'>
+        <ShopList/>
+        <Shop path=':id'/>
+      </ShopTab>
+      <QuestTab path='/quest'>
+        <AllQuestions/>
+        <Question path=':id'/>
+      </QuestTab>
     </Router>
   )
 }
 
 function App() {
-  const [routerState] = useState(() => new State('/shops'))
+  const routerState = useMemo(() => new State('/shops'), [])
   const pop = useCallback(() => {
     routerState.pop()
     return true
@@ -57,8 +59,8 @@ function App() {
 
   return (
     <View>
-      <Button onPress={() => routerState.push('/shops/123')} />
-      <Button onPress={() => routerState.reset('/quest/1')} />
+      <Button onPress={() => routerState.push('/shops/123')}/>
+      <Button onPress={() => routerState.reset('/quest/1')}/>
       <Routes
         location={routerState.current}
         paths={routerState.paths}
@@ -68,17 +70,19 @@ function App() {
   )
 }
 
-function createCustomStack() {
-  const preset = TransitionPresets.SlideFromRightIOS
+const StackPreset = TransitionPresets.SlideFromRightIOS 
+const StackOptions = {
+  gestureEnabled: true,
+  gestureDirection: StackPreset.gestureDirection,
+  transitionSpec: StackPreset.transitionSpec,
+  cardStyleInterpolator: StackPreset.cardStyleInterpolator,
+} 
 
+function stack(paths, onNavigateBack) {
   return createStack({
+    paths, onNavigateBack,
     headerMode: 'none',
-    options: {
-      gestureEnabled: true,
-      gestureDirection: preset.gestureDirection,
-      transitionSpec: preset.transitionSpec,
-      cardStyleInterpolator: preset.cardStyleInterpolator,
-    },
+    options: StackOptions,
   })
 }
 ```
