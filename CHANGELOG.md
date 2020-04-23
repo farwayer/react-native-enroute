@@ -1,5 +1,10 @@
 ## Changelog
 
+### 6.0.1
+
+- fix for @react-navigation/stack 5.2.13
+- simplify
+
 ### 6.0.0
 
 - react-navigation@5
