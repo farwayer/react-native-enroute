@@ -1,4 +1,4 @@
-import React, {useMemo, useCallback} from 'react'
+import React, {useMemo, useCallback, useRef} from 'react'
 import {StackView} from '@react-navigation/stack'
 import {StackActions} from '@react-navigation/native'
 import keygen from './keygen'
@@ -14,25 +14,38 @@ export function Stack({
   children,
   ...props
 }) {
-  const count = paths?.length
+  const state = useRef(({
+    routes: [],
+  })).current
+
+  let count = paths?.length
   if (!count) {
     throw new Error("react-native-enroute: paths must not be empty")
   }
 
   const topPath = last(paths)
 
-  const state = useMemo(() => ({
-    routes: [],
-  }), [])
-
   if (topPath !== lastPath(state.routes)) {
     state.routes = state.routes.slice(0, count)
-    state.index = count - 1
-    state.routeNames = paths
 
     if (topPath !== lastPath(state.routes)) {
-      state.routes[count - 1] = makeRoute(topPath, children)
+      const route = makeRoute(topPath, children)
+      state.routes.splice(-1, 1, route)
     }
+
+    if (state.routes.length !== count) {
+      console.warn(
+        "react-native-enroute: routes and paths count are different.\n" +
+        "Are you trying to pass paths from another stack?\n" +
+        `Paths: [${paths.join(', ')}]\n` +
+        `Latest ${state.routes.length} paths will be used.`
+      )
+      count = state.routes.length
+      paths = paths.slice(-count)
+    }
+
+    state.index = count - 1
+    state.routeNames = paths
   }
 
   const navigation = useMemo(() => ({
@@ -42,7 +55,7 @@ export function Stack({
       if (action.type !== Pop) return
       onNavigateBack?.()
     },
-  }), [])
+  }), [onNavigateBack])
 
   const descriptors = useMemo(() => (
     state.routes.reduce((res, route) => {
