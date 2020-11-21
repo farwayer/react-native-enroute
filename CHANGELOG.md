@@ -1,5 +1,10 @@
 ## Changelog
 
+### 6.0.2
+
+- show warning if routes and paths count are differect
+- update memoized onNavigateBack
+
 ### 6.0.1
 
 - fix for @react-navigation/stack 5.2.13
