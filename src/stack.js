@@ -28,20 +28,20 @@ export function Stack({
   if (topPath !== lastPath(state.routes)) {
     state.routes = state.routes.slice(0, count)
 
-    if (topPath !== lastPath(state.routes)) {
-      const route = makeRoute(topPath, children)
-      state.routes.splice(-1, 1, route)
-    }
-
-    if (state.routes.length !== count) {
+    if (count > state.routes.length + 1) {
       console.warn(
-        "react-native-enroute: routes and paths count are different.\n" +
+        "react-native-enroute: paths count is more than routes in stack.\n" +
         "Are you trying to pass paths from another stack?\n" +
         `Paths: [${paths.join(', ')}]\n` +
-        `Latest ${state.routes.length} paths will be used.`
+        `Latest ${state.routes.length + 1} paths will be used.`
       )
-      count = state.routes.length
+      count = state.routes.length + 1
       paths = paths.slice(-count)
+    }
+
+    if (topPath !== lastPath(state.routes)) {
+      const route = makeRoute(topPath, children)
+      state.routes[count - 1] = route
     }
 
     state.index = count - 1
