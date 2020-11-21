@@ -1,5 +1,9 @@
 ## Changelog
 
+### 6.0.3
+
+- fix invalid routes count check
+
 ### 6.0.2
 
 - show warning if routes and paths count are differect
