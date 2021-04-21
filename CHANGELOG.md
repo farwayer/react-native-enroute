@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.0.0
+
+- use native stack from `react-native-screens`
+
 ### 6.0.3
 
 - fix invalid routes count check

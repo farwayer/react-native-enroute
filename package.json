@@ -1,7 +1,7 @@
 {
   "name": "react-native-enroute",
-  "version": "6.0.3",
-  "description": "Simple and fast React Native router based on react-enroute and react-navigation",
+  "version": "7.0.0",
+  "description": "Simple and fast React Native router based on react-enroute and native navigation",
   "repository": "farwayer/react-native-enroute",
   "author": "farwayer <farwayer@gmail.com>",
   "license": "WTFPL",
@@ -16,6 +16,7 @@
     "stack"
   ],
   "peerDependencies": {
-    "@react-navigation/stack": "^5.2.11"
+    "@react-navigation/native": "*",
+    "react-native-screens": "*"
   }
 }

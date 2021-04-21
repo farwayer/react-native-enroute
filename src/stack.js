@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback, useRef} from 'react'
-import {StackView} from '@react-navigation/stack'
+import {NativeStackView} from 'react-native-screens/native-stack'
 import {StackActions} from '@react-navigation/native'
 import keygen from './keygen'
 
@@ -66,7 +66,7 @@ export function Stack({
   ), [state.routes, options])
 
   return (
-    <StackView
+    <NativeStackView
       {...{state, navigation, descriptors}}
       {...props}
     />
