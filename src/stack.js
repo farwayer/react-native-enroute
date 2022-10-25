@@ -59,8 +59,8 @@ export function Stack({
 
   const descriptors = useMemo(() => (
     state.routes.reduce((res, route) => {
-      const {key, render} = route
-      res[key] = {render, options, navigation}
+      const {key, render, routeOptions} = route
+      res[key] = {render, options: {...options, ...routeOptions}, navigation}
       return res
     }, {})
   ), [state.routes, options])
@@ -80,10 +80,18 @@ export default function createStack(props) {
 }
 
 function makeRoute(path, children) {
+  let routeOptions = {}
+  let component = children
+  while (component?.props) {
+    routeOptions = {...routeOptions, ...component.props.routeOptions || {}}
+    component = component.props.children
+  }
+
   return {
     key: keygen(),
     name: path,
     render: () => children,
+    routeOptions,
   }
 }
 
