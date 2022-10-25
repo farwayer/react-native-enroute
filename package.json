@@ -1,6 +1,6 @@
 {
   "name": "react-native-enroute",
-  "version": "7.0.1",
+  "version": "7.1.0",
   "description": "Simple and fast React Native router based on react-enroute and native navigation",
   "repository": "farwayer/react-native-enroute",
   "author": "farwayer <farwayer@gmail.com>",
@@ -18,8 +18,5 @@
   "peerDependencies": {
     "@react-navigation/native": "*",
     "react-native-screens": "*"
-  },
-  "publishConfig": {
-    "registry": "https://nexus.wsmgroup.ru/repository/npm-wsm-stable-group/"
   }
 }
