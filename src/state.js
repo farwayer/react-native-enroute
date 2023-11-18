@@ -3,7 +3,7 @@ export default class State {
   listeners = []
 
 
-  constructor(path, listener) {
+  letructor(path, listener) {
     if (listener) {
       this.listen(listener)
     }
@@ -62,7 +62,7 @@ export default class State {
   }
 
   stopListen = listener => {
-    const i = this.listeners.indexOf(listener)
+    let i = this.listeners.indexOf(listener)
     if (i === -1) return
 
     this.listeners.splice(i, 1)
@@ -70,7 +70,7 @@ export default class State {
 
 
   _notify(action) {
-    const path = this.current
+    let path = this.current
     this.listeners.forEach(listener => {
       listener(path, action, this)
     })

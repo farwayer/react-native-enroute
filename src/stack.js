@@ -4,7 +4,7 @@ import {StackActions} from '@react-navigation/native'
 import keygen from './keygen'
 
 
-const Pop = StackActions.pop().type
+let Pop = StackActions.pop().type
 
 
 export function Stack({
@@ -14,7 +14,7 @@ export function Stack({
   children,
   ...props
 }) {
-  const state = useRef(({
+  let state = useRef(({
     routes: [],
   })).current
 
@@ -23,7 +23,7 @@ export function Stack({
     throw new Error("react-native-enroute: paths must not be empty")
   }
 
-  const topPath = last(paths)
+  let topPath = last(paths)
 
   if (topPath !== lastPath(state.routes)) {
     state.routes = state.routes.slice(0, count)
@@ -40,7 +40,7 @@ export function Stack({
     }
 
     if (topPath !== lastPath(state.routes)) {
-      const route = makeRoute(topPath, children)
+      let route = makeRoute(topPath, children)
       state.routes[count - 1] = route
     }
 
@@ -48,7 +48,7 @@ export function Stack({
     state.routeNames = paths
   }
 
-  const navigation = useMemo(() => ({
+  let navigation = useMemo(() => ({
     emit() {},
     navigate() {},
     dispatch(action) {
@@ -57,9 +57,9 @@ export function Stack({
     },
   }), [onNavigateBack])
 
-  const descriptors = useMemo(() => (
+  let descriptors = useMemo(() => (
     state.routes.reduce((res, route) => {
-      const {key, render, routeOptions} = route
+      let {key, render, routeOptions} = route
       res[key] = {render, options: {...options, ...routeOptions}, navigation}
       return res
     }, {})
