@@ -16,7 +16,10 @@
     "stack"
   ],
   "peerDependencies": {
-    "@react-navigation/native": "*",
-    "react-native-screens": "*"
+    "@react-navigation/native": "*"
+  },
+  "devDependencies": {
+    "@react-navigation/native": "^7.1.22",
+    "react-native-screens": "^4.18.0"
   }
 }

@@ -19,6 +19,9 @@ yarn add react-native-enroute react-enroute react-native-screens @react-navigati
 import {Router} from 'react-enroute'
 import {State, createStack} from 'react-native-enroute'
 
+// react navigation 7.*
+import {ThemeProvider, DefaultTheme} from '@react-navigation/native'
+
 
 function Routes({
   location,
@@ -29,16 +32,19 @@ function Routes({
   const QuestTab = createStack({paths, onNavigateBack})
 
   return (
-    <Router {...{location}}>
-      <ShopTab path='/shops'>
-        <ShopList/>
-        <Shop path=':id'/>
-      </ShopTab>
-      <QuestTab path='/quest'>
-        <AllQuestions/>
-        <Question path=':id'/>
-      </QuestTab>
-    </Router>
+	  // ThemeProvider for react navigation 7.* only
+    <ThemeProvider value={DefaultTheme}>
+			<Router {...{location}}>
+				<ShopTab path='/shops'>
+					<ShopList/>
+					<Shop path=':id'/>
+				</ShopTab>
+				<QuestTab path='/quest'>
+					<AllQuestions/>
+					<Question path=':id'/>
+				</QuestTab>
+			</Router>
+		</ThemeProvider>
   )
 }
 
