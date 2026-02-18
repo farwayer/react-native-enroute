@@ -1,6 +1,8 @@
 .idea/
 test/
+.yarn/
 .babelrc
 yarn.lock
+.yarnrc.yml
 .npmignore
 .travis.yml
