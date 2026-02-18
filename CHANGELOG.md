@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.0.0
+
+- use native stack from `@react-navigation/native-stack`
+
 ### 7.0.0
 
 - use native stack from `react-native-screens`

@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback, useRef} from 'react'
-import {NativeStackView} from 'react-native-screens/native-stack'
+import {NativeStackView} from '@react-navigation/native-stack'
 import {StackActions} from '@react-navigation/native'
 import keygen from './keygen'
 
@@ -16,6 +16,7 @@ export function Stack({
 }) {
   let state = useRef(({
     routes: [],
+	  preloadedRoutes: [],
   })).current
 
   let count = paths?.length
@@ -60,7 +61,7 @@ export function Stack({
   let descriptors = useMemo(() => (
     state.routes.reduce((res, route) => {
       let {key, render, routeOptions} = route
-      res[key] = {render, options: {...options, ...routeOptions}, navigation}
+      res[key] = {route, render, options: {...options, ...routeOptions}, navigation}
       return res
     }, {})
   ), [state.routes, options])

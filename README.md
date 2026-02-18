@@ -12,16 +12,14 @@ Library plays well with Redux and MobX.
 ## Usage
 
 ```bash
-yarn add react-native-enroute react-enroute react-native-screens @react-navigation/native
+yarn add react-native-enroute react-enroute react-native-screens @react-navigation/native @react-navigation/native-stack
 ```
 
 ```js
 import {Router} from 'react-enroute'
 import {State, createStack} from 'react-native-enroute'
-
-// react navigation 7.*
-import {ThemeProvider, DefaultTheme} from '@react-navigation/native'
-
+import {ThemeProvider, PreventRemoveProvider} from '@react-navigation/core'
+import {DefaultTheme} from '@react-navigation/native'
 
 function Routes({
   location,
@@ -32,18 +30,19 @@ function Routes({
   const QuestTab = createStack({paths, onNavigateBack})
 
   return (
-	  // ThemeProvider for react navigation 7.* only
     <ThemeProvider value={DefaultTheme}>
-			<Router {...{location}}>
-				<ShopTab path='/shops'>
-					<ShopList/>
-					<Shop path=':id'/>
-				</ShopTab>
-				<QuestTab path='/quest'>
-					<AllQuestions/>
-					<Question path=':id'/>
-				</QuestTab>
-			</Router>
+	    <PreventRemoveProvider>
+				<Router {...{location}}>
+					<ShopTab path='/shops'>
+						<ShopList/>
+						<Shop path=':id'/>
+					</ShopTab>
+					<QuestTab path='/quest'>
+						<AllQuestions/>
+						<Question path=':id'/>
+					</QuestTab>
+				</Router>
+			</PreventRemoveProvider>
 		</ThemeProvider>
   )
 }
